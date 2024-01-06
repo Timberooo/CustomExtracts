@@ -10,7 +10,7 @@ namespace CustomExtracts
 {
 	public static class Patches
 	{
-		private static List<CustomExtract> extracts = new();
+		private static List<GameObject> extracts = new();
 
 
 
@@ -69,6 +69,7 @@ namespace CustomExtracts
 			{
 				Logger.LogDebug("OnDestroyPatch.PatchPostfix called");
 
+				extracts.ForEach(GameObject.Destroy);
 				extracts.Clear();
 			}
 		}
@@ -84,10 +85,7 @@ namespace CustomExtracts
 			if (gameWorld == null)
 				return;
 
-			CustomExtract customExtract = gameWorld.gameObject.AddComponent<CustomExtract>();
-			GameObject extract = customExtract.extract;
-
-			extract = new GameObject();
+			GameObject extract = new();
 			extract.name = name;
 			extract.layer = 13;
 			extract.transform.position = position;
@@ -122,7 +120,7 @@ namespace CustomExtracts
 			debugRenderer.material.color = new Color(1f, 1f, 0f, 0.5f);
 			debugMeshRenderer.enabled = true;
 
-			extracts.Add(customExtract);
+			extracts.Add(extract);
 
 			Console.WriteLine("New extract created and added to extracts list");
 		}
