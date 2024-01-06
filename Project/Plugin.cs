@@ -2,13 +2,13 @@
 
 namespace CustomExtracts
 {
-    [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
+    [BepInPlugin("com.Timber.CustomExtracts", "CustomExtracts", "1.0.0")]
     public class Plugin : BaseUnityPlugin
     {
         private void Awake()
         {
-            // Plugin startup logic
-            Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
+            new Patches.OnGameStartPatch().Enable();
+            new Patches.OnDestroyPatch().Enable();
         }
     }
 }
