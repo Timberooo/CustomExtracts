@@ -18,7 +18,7 @@ namespace CustomExtracts.Patches
 		{
 			Logger.LogDebug("GameWorldOnDestroyPatch.PatchPostfix called");
 
-			CustomExtracts.DestroyAllExtracts();
+			CustomExtractsManager.DestroyAllExtracts();
 		}
 	}
 }

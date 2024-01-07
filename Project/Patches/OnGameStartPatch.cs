@@ -35,7 +35,7 @@ namespace CustomExtracts
 			string name2 = "SecondExtract";
 			float time2 = 10f;
 
-			CustomExtracts.CreateExtract(position, size, eulerAngles, name, time);
+			CustomExtractsManager.CreateExtract(position, size, eulerAngles, name, time);
 			//CustomExtracts.CreateSphereExtract(position2, 40f, eulerAngles2, name2, time2);
 		}
 	}

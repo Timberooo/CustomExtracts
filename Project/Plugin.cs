@@ -7,8 +7,8 @@ namespace CustomExtracts
     {
         private void Awake()
         {
-            new CustomExtracts.OnGameStartPatch().Enable();
-            new CustomExtracts.OnDestroyPatch().Enable();
+            new CustomExtractsManager.OnGameStartPatch().Enable();
+            new CustomExtractsManager.OnDestroyPatch().Enable();
         }
     }
 }

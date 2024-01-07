@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace CustomExtracts
 {
-	public static class CustomExtracts
+	public static class CustomExtractsManager
 	{
 		private static List<GameObject> extracts = new();
 
