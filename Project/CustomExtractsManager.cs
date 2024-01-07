@@ -1,5 +1,7 @@
-﻿using Comfort.Common;
+﻿using BepInEx.Configuration;
+using Comfort.Common;
 using EFT;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,9 +28,23 @@ namespace CustomExtracts
 
 		public static void DestroyAllExtracts()
 		{
-			extracts.ForEach(extract => Object.Destroy(extract));
+			extracts.ForEach(extract => GameObject.Destroy(extract));
 			extracts.Clear();
 		}
+
+
+
+		internal static void ShowExtracts_SettingChanged(object sender, EventArgs e)
+		{
+			extracts.ForEach(extract => extract.GetComponent<Renderer>().enabled = (bool)((SettingChangedEventArgs)e).ChangedSetting.BoxedValue);
+		}
+
+
+
+		internal static void DebugColor_SettingChanged(object sender, System.EventArgs e)
+		{
+			extracts.ForEach(extract => extract.GetComponent<Renderer>().material.color = (Color)((SettingChangedEventArgs)e).ChangedSetting.BoxedValue);
+        }
 
 
 
@@ -49,7 +65,7 @@ namespace CustomExtracts
 
 			renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 			renderer.material.color = new Color(1f, 0f, 1f, 0.5f);
-			renderer.enabled = true;
+			renderer.enabled = Plugin.ShowExtracts.Value;
 
 			var test = extract.AddComponent<ExtractTestComponent>();
 			test.Duration = time;
