@@ -1,7 +1,6 @@
 ﻿using Aki.Reflection.Patching;
 using Comfort.Common;
 using EFT;
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -81,8 +80,6 @@ namespace CustomExtracts
 				return;
 
 			GameObject extract = GameObject.CreatePrimitive(PrimitiveType.Cube);
-			//extract.GetComponent<BoxCollider>().size = size;
-
 			SetExtractProperties(extract, position, size, eulerAngles, name, time);
 
 			extracts.Add(extract);
@@ -96,8 +93,6 @@ namespace CustomExtracts
 				return;
 
 			GameObject extract = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-			//extract.GetComponent<SphereCollider>().radius = radius;
-
 			SetExtractProperties(extract, position, new Vector3(radius, radius, radius), eulerAngles, name, time);
 
 			extracts.Add(extract);
@@ -126,6 +121,7 @@ namespace CustomExtracts
 			renderer.material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
 			renderer.material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
 
+			renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 			renderer.material.color = new Color(1f, 1f, 0f, 0.75f);
 			renderer.enabled = true;
 
