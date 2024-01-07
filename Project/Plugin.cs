@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using CustomExtracts;
 
 namespace CustomExtracts
 {
@@ -7,8 +8,8 @@ namespace CustomExtracts
     {
         private void Awake()
         {
-            new CustomExtractsManager.OnGameStartPatch().Enable();
-            new CustomExtractsManager.OnDestroyPatch().Enable();
+            new OnGameStartPatch().Enable();
+            new GameWorldOnDestroyPatch().Enable();
         }
     }
 }

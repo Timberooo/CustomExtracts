@@ -2,7 +2,7 @@
 using EFT;
 using System.Reflection;
 
-namespace CustomExtracts.Patches
+namespace CustomExtracts
 {
 	public class GameWorldOnDestroyPatch : ModulePatch
 	{
