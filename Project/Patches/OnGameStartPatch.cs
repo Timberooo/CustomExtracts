@@ -35,8 +35,15 @@ namespace CustomExtracts
 			string name2 = "SecondExtract";
 			float time2 = 10f;
 
+			Vector3 position3 = new Vector3(-75f, 15f, 0f);
+			Vector3 size3 = new Vector3(40f, 40f, 40f);
+			Vector3 eulerAngles3 = new Vector3(0f, 45f, 0f);
+			string name3 = "Another extract";
+			float time3 = 10f;
+
 			CustomExtractsManager.CreateExtract(position, size, eulerAngles, name, time);
-			//CustomExtracts.CreateSphereExtract(position2, 40f, eulerAngles2, name2, time2);
+			CustomExtractsManager.CreateExtract(position2, size2, eulerAngles2, name2, time2);
+			CustomExtractsManager.CreateExtract(position3, size3, eulerAngles3, name3, time3);
 		}
 	}
 }
