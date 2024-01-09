@@ -20,8 +20,12 @@ namespace CustomExtracts
 		{
 			Logger.LogDebug("OnGameStartedPatch.PatchPostfix called");
 
-			if (Singleton<GameWorld>.Instance == null)
+			GameWorld gameWorld = Singleton<GameWorld>.Instance;
+
+			if (gameWorld == null)
 				return;
+
+			gameWorld.gameObject.AddComponent<ExtractEditor>();
 
 			Vector3 position = new Vector3(0f, 0f, 0f);
 			Vector3 size = new Vector3(20f, 20f, 20f);
