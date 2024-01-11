@@ -14,7 +14,20 @@ namespace CustomExtracts
 
 
 
-		public static void CreateExtract(Vector3 position, Vector3 size, Vector3 eulerAngles, string name, float time)
+		internal static GameObject CurrentExtract
+		{
+			get
+			{
+				if (currentExtractIndex > -1)
+					return extracts[currentExtractIndex];
+				else
+					return null;
+			}
+		}
+
+
+
+		public static void CreateExtract(Vector3 position, Vector3 size, Vector3 eulerAngles, string name, float time, bool enabled = true)
 		{
 			if (Singleton<GameWorld>.Instance == null)
 				return;
@@ -22,6 +35,7 @@ namespace CustomExtracts
 			GameObject extract = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
 			extract.GetComponent<Collider>().isTrigger = true;
+			extract.GetComponent<Collider>().enabled = enabled;
 
 			ExtractTestComponent exfil = extract.AddComponent<ExtractTestComponent>();
 			exfil.Duration = time;
@@ -39,7 +53,7 @@ namespace CustomExtracts
 
 			renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 			renderer.material.color = Plugin.currentExtractColor.Value;
-			renderer.enabled = ExtractEditor.showEditor;
+			renderer.enabled = ExtractEditor.ShowEditor;
 
 			extract.name = name;
 			extract.layer = 13; // Copying SamSWAT's Fire Support extract implementation. No idea why this has to be set to this value
@@ -55,7 +69,6 @@ namespace CustomExtracts
 				extracts[currentExtractIndex].GetComponent<Renderer>().material.color = Plugin.extractColor.Value;
 
 			currentExtractIndex = extracts.Count - 1;
-			ExtractEditor.extractName = name;
 		}
 
 
@@ -66,7 +79,27 @@ namespace CustomExtracts
 			extracts.Clear();
 
 			currentExtractIndex = -1;
-			ExtractEditor.extractName = "";
+		}
+
+
+
+		public static void DeleteCurrentExtract()
+		{
+			GameObject.Destroy(extracts[currentExtractIndex]);
+			extracts.RemoveAt(currentExtractIndex);
+
+			if (extracts.Count <= 0)
+				currentExtractIndex = -1;
+			else
+			{
+				// Only need to update index when the last object was the current extract;
+				// otherwise the next extract gets shifted to the index during removal
+
+				if (currentExtractIndex >= extracts.Count)
+					currentExtractIndex = extracts.Count - 1;
+
+				extracts[currentExtractIndex].GetComponent<Renderer>().material.color = Color.green;
+			}
 		}
 
 
@@ -86,7 +119,6 @@ namespace CustomExtracts
 				currentExtractIndex = 0;
 
 			extracts[currentExtractIndex].GetComponent<Renderer>().material.color = Plugin.currentExtractColor.Value;
-			ExtractEditor.extractName = extracts[currentExtractIndex].name;
 		}
 
 
@@ -106,7 +138,6 @@ namespace CustomExtracts
 				currentExtractIndex = extracts.Count - 1;
 
 			extracts[currentExtractIndex].GetComponent<Renderer>().material.color = Plugin.currentExtractColor.Value;
-			ExtractEditor.extractName = extracts[currentExtractIndex].name;
 		}
 
 
@@ -114,13 +145,6 @@ namespace CustomExtracts
 		internal static void ShowExtracts(bool show)
 		{
 			extracts.ForEach(extract => extract.GetComponent<Renderer>().enabled = show);
-		}
-
-
-
-		internal static void UpdateCurrentExtractName(string name)
-		{
-			extracts[currentExtractIndex].name = name;
 		}
 
 
