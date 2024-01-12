@@ -1,6 +1,8 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
+using Comfort.Common;
+using EFT;
 using UnityEngine;
 
 namespace CustomExtracts
@@ -62,36 +64,43 @@ namespace CustomExtracts
 
 		private void AlwaysShowExtracts_SettingChanged(object sender, System.EventArgs e)
 		{
-			if (!ExtractEditor.ShowEditor)
-				CustomExtractsManager.ShowExtracts((bool)((SettingChangedEventArgs)e).ChangedSetting.BoxedValue);
+			if (ExtractEditor.ShowEditor)
+				return;
+
+			if (Singleton<GameWorld>.Instantiated)
+				Singleton<GameWorld>.Instance.gameObject.GetComponent<CustomExtractsManager>().ShowExtracts((bool)((SettingChangedEventArgs)e).ChangedSetting.BoxedValue);
 		}
 
 
 
 		private void ExtractColor_SettingChanged(object sender, System.EventArgs e)
 		{
-			CustomExtractsManager.ChangeColor(CustomExtractsManager.ChangeColorForExtractState.General, (Color)((SettingChangedEventArgs)e).ChangedSetting.BoxedValue);
+			if (Singleton<GameWorld>.Instantiated)
+				Singleton<GameWorld>.Instance.gameObject.GetComponent<CustomExtractsManager>().ChangeColor(CustomExtractsManager.ChangeColorForExtractState.General, (Color)((SettingChangedEventArgs)e).ChangedSetting.BoxedValue);
 		}
 
 
 
 		private void CurrentExtractColor_SettingChanged(object sender, System.EventArgs e)
 		{
-			CustomExtractsManager.ChangeColor(CustomExtractsManager.ChangeColorForExtractState.Current, (Color)((SettingChangedEventArgs)e).ChangedSetting.BoxedValue);
+			if (Singleton<GameWorld>.Instantiated)
+				Singleton<GameWorld>.Instance.gameObject.GetComponent<CustomExtractsManager>().ChangeColor(CustomExtractsManager.ChangeColorForExtractState.Current, (Color)((SettingChangedEventArgs)e).ChangedSetting.BoxedValue);
 		}
 
 
 
 		private void DisabledExtractColor_SettingChanged(object sender, System.EventArgs e)
 		{
-			CustomExtractsManager.ChangeColor(CustomExtractsManager.ChangeColorForExtractState.DisabledGeneral, (Color)((SettingChangedEventArgs)e).ChangedSetting.BoxedValue);
+			if (Singleton<GameWorld>.Instantiated)
+				Singleton<GameWorld>.Instance.gameObject.GetComponent<CustomExtractsManager>().ChangeColor(CustomExtractsManager.ChangeColorForExtractState.DisabledGeneral, (Color)((SettingChangedEventArgs)e).ChangedSetting.BoxedValue);
 		}
 
 
 
 		private void DisabledCurrentExtractColor_SettingChanged(object sender, System.EventArgs e)
 		{
-			CustomExtractsManager.ChangeColor(CustomExtractsManager.ChangeColorForExtractState.DisabledCurrent, (Color)((SettingChangedEventArgs)e).ChangedSetting.BoxedValue);
+			if (Singleton<GameWorld>.Instantiated)
+				Singleton<GameWorld>.Instance.gameObject.GetComponent<CustomExtractsManager>().ChangeColor(CustomExtractsManager.ChangeColorForExtractState.DisabledCurrent, (Color)((SettingChangedEventArgs)e).ChangedSetting.BoxedValue);
 		}
 	}
 }

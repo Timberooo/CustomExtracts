@@ -11,6 +11,7 @@ namespace CustomExtracts
 
 
 
+		private CustomExtractsManager _customExtractsManager = null;
 		private GameObject _input;
 
 		private Rect _editorWindowRect         = new Rect(50, 60, 785, 333);
@@ -48,6 +49,10 @@ namespace CustomExtracts
 
 			// TODO: Check if player is in hideout then display error message.
 
+			if (_customExtractsManager == null)
+				if (Singleton<GameWorld>.Instantiated)
+					_customExtractsManager = Singleton<GameWorld>.Instance.gameObject.GetComponent<CustomExtractsManager>();
+
 			if (_input == null)
 				_input = GameObject.Find("___Input");
 
@@ -60,7 +65,7 @@ namespace CustomExtracts
 				Cursor.lockState = CursorLockMode.None;
 				Singleton<GUISounds>.Instance.PlayUISound(EUISoundType.MenuContextMenu);
 
-				CustomExtractsManager.ShowExtracts(true);
+				_customExtractsManager.ShowExtracts(true);
 			}
 			else
 			{
@@ -69,7 +74,7 @@ namespace CustomExtracts
 				Singleton<GUISounds>.Instance.PlayUISound(EUISoundType.MenuDropdown);
 
 				if (Plugin.AlwaysShowExtracts.Value == false)
-					CustomExtractsManager.ShowExtracts(false);
+					_customExtractsManager.ShowExtracts(false);
 			}
 
 			_input.SetActive(!ShowEditor);
@@ -119,11 +124,11 @@ namespace CustomExtracts
 
 			NameControls(10, 25);
 
-			if (!CustomExtractsManager.NoExtracts)
+			if (!_customExtractsManager.NoExtracts)
 			{
-				CustomExtractsManager.CurrentExtractPosition = TransformControls(10, 120, "Position", "X", "Y", "Z", 15, ref _positionXText, ref _positionYText, ref _positionZText, CustomExtractsManager.CurrentExtractPosition);
-				CustomExtractsManager.CurrentExtractSize = TransformControls(250, 120, "Size", "Width", "Height", "Length", 45, ref _sizeXText, ref _sizeYText, ref _sizeZText, CustomExtractsManager.CurrentExtractSize);
-				CustomExtractsManager.CurrentExtractEulerAngles = TransformControls(520, 120, "Rotation", "Pitch", "Yaw", "Roll", 35, ref _rotationXText, ref _rotationYText, ref _rotationZText, CustomExtractsManager.CurrentExtractEulerAngles);
+				_customExtractsManager.CurrentExtractPosition = TransformControls(10, 120, "Position", "X", "Y", "Z", 15, ref _positionXText, ref _positionYText, ref _positionZText, _customExtractsManager.CurrentExtractPosition);
+				_customExtractsManager.CurrentExtractSize = TransformControls(250, 120, "Size", "Width", "Height", "Length", 45, ref _sizeXText, ref _sizeYText, ref _sizeZText, _customExtractsManager.CurrentExtractSize);
+				_customExtractsManager.CurrentExtractEulerAngles = TransformControls(520, 120, "Rotation", "Pitch", "Yaw", "Roll", 35, ref _rotationXText, ref _rotationYText, ref _rotationZText, _customExtractsManager.CurrentExtractEulerAngles);
 				PropertiesControls(10, 225);
 
 				NavigationControls(20, 45);
@@ -181,7 +186,7 @@ namespace CustomExtracts
 			GUI.backgroundColor = Color.red;
 			if (GUI.Button(new Rect(_deleteWarningWindowRect.width / 2 - 80, 80, 80, 30), "Delete"))
 			{
-				CustomExtractsManager.DestroyCurrentExtract();
+				_customExtractsManager.DestroyCurrentExtract();
 				ResetAllFieldText();
 
 				_showDeleteWarning = false;
@@ -197,8 +202,8 @@ namespace CustomExtracts
 		{
 			GUI.Box(new Rect(x, y, 765, 90), "");
 
-			if (!CustomExtractsManager.NoExtracts)
-				CustomExtractsManager.CurrentExtractName = StringSettingField(new Rect(x + 100, y + 20, 565, 22), ref _nameText, CustomExtractsManager.CurrentExtractName);
+			if (!_customExtractsManager.NoExtracts)
+				_customExtractsManager.CurrentExtractName = StringSettingField(new Rect(x + 100, y + 20, 565, 22), ref _nameText, _customExtractsManager.CurrentExtractName);
 			else
 			{
 				Color originalTextColor = GUI.contentColor;
@@ -236,18 +241,18 @@ namespace CustomExtracts
 
 			if (!LockEditor)
 			{
-				bool prevEnabled = CustomExtractsManager.CurrentExtractEnabled;
-				CustomExtractsManager.CurrentExtractEnabled = GUI.Toggle(new Rect(x + 105, y + 4, 10, 22), CustomExtractsManager.CurrentExtractEnabled, "");
+				bool prevEnabled = _customExtractsManager.CurrentExtractEnabled;
+				_customExtractsManager.CurrentExtractEnabled = GUI.Toggle(new Rect(x + 105, y + 4, 10, 22), _customExtractsManager.CurrentExtractEnabled, "");
 
-				if (prevEnabled != CustomExtractsManager.CurrentExtractEnabled)
+				if (prevEnabled != _customExtractsManager.CurrentExtractEnabled)
 					_unsavedData = true;
 			}
 			else
-				GUI.Toggle(new Rect(x + 105, y + 4, 10, 22), CustomExtractsManager.CurrentExtractEnabled, "");
+				GUI.Toggle(new Rect(x + 105, y + 4, 10, 22), _customExtractsManager.CurrentExtractEnabled, "");
 			// ----- End enabled -----
 
 			// ----- Begin time -----
-			CustomExtractsManager.CurrentExtractTime = FloatSettingField(15, 255, "Time (seconds)", 95, ref _timeText, CustomExtractsManager.CurrentExtractTime, lowerLimit: 0);
+			_customExtractsManager.CurrentExtractTime = FloatSettingField(15, 255, "Time (seconds)", 95, ref _timeText, _customExtractsManager.CurrentExtractTime, lowerLimit: 0);
 			// ----- End time -----
 		}
 
@@ -257,13 +262,13 @@ namespace CustomExtracts
 		{
 			if (GUI.Button(new Rect(x, y, 80, 22), "Previous") && !LockEditor)
 			{
-				CustomExtractsManager.DecrementCurrentExtract();
+				_customExtractsManager.DecrementCurrentExtract();
 				ResetAllFieldText();
 			}
 
 			if (GUI.Button(new Rect(x + 665, y, 80, 22), "Next") && !LockEditor)
 			{
-				CustomExtractsManager.IncrementCurrentExtract();
+				_customExtractsManager.IncrementCurrentExtract();
 				ResetAllFieldText();
 			}
 		}
@@ -310,12 +315,12 @@ namespace CustomExtracts
 				// TODO: Create a new disabled extract at player position
 				//       with default size, rotation, and time.
 
-				CustomExtractsManager.CreateExtract("NewExtract", Singleton<GameWorld>.Instance.MainPlayer.Transform.position, new Vector3(10f, 10f, 10f), Vector3.zero, enabled: false);
+				_customExtractsManager.CreateExtract("NewExtract", Singleton<GameWorld>.Instance.MainPlayer.Transform.position, new Vector3(10f, 10f, 10f), Vector3.zero, enabled: false);
 				ResetAllFieldText();
 				_unsavedData = true;
 			}
 
-			if (CustomExtractsManager.NoExtracts)
+			if (_customExtractsManager.NoExtracts)
 				return;
 
 			GUI.backgroundColor = Color.red;

@@ -1,4 +1,5 @@
 ﻿using Aki.Reflection.Patching;
+using Comfort.Common;
 using EFT;
 using System.Reflection;
 
@@ -18,7 +19,8 @@ namespace CustomExtracts
 		{
 			Logger.LogDebug("GameWorldOnDestroyPatch.PatchPostfix called");
 
-			CustomExtractsManager.DestroyAllExtracts();
+			if (Singleton<GameWorld>.Instantiated)
+				Singleton<GameWorld>.Instance.gameObject.GetComponent<CustomExtractsManager>().DestroyAllExtracts();
 		}
 	}
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace CustomExtracts
 {
-	internal static class CustomExtractsManager
+	internal class CustomExtractsManager : MonoBehaviour
 	{
 		internal enum ChangeColorForExtractState
 		{
@@ -17,41 +17,41 @@ namespace CustomExtracts
 
 
 
-		private static List<GameObject> _extracts = new();
-		private static int              _currentExtractIndex = -1;
+		private List<GameObject> _extracts = new();
+		private int              _currentExtractIndex = -1;
 
 
 
-		internal static bool NoExtracts
+		internal bool NoExtracts
 		{
 			get { return _extracts.Count <= 0; }
 		}
 
-		internal static string CurrentExtractName
+		internal string CurrentExtractName
 		{
 			get { return _extracts[_currentExtractIndex].name; }
 			set { _extracts[_currentExtractIndex].name = value; }
 		}
 
-		internal static Vector3 CurrentExtractPosition
+		internal Vector3 CurrentExtractPosition
 		{
 			get { return _extracts[_currentExtractIndex].transform.position; }
 			set { _extracts[_currentExtractIndex].transform.position = value; }
 		}
 
-		internal static Vector3 CurrentExtractSize
+		internal Vector3 CurrentExtractSize
 		{
 			get { return _extracts[_currentExtractIndex].transform.localScale; }
 			set { _extracts[_currentExtractIndex].transform.localScale = value; }
 		}
 
-		internal static Vector3 CurrentExtractEulerAngles
+		internal Vector3 CurrentExtractEulerAngles
 		{
 			get { return _extracts[_currentExtractIndex].transform.eulerAngles; }
 			set { _extracts[_currentExtractIndex].transform.eulerAngles = value; }
 		}
 
-		internal static bool CurrentExtractEnabled
+		internal bool CurrentExtractEnabled
 		{
 			get { return _extracts[_currentExtractIndex].GetComponent<Collider>().enabled; }
 			set
@@ -61,7 +61,7 @@ namespace CustomExtracts
 			}
 		}
 
-		internal static float CurrentExtractTime
+		internal float CurrentExtractTime
 		{
 			get { return _extracts[_currentExtractIndex].GetComponent<ExtractTestComponent>().Duration; }
 			set { _extracts[_currentExtractIndex].GetComponent<ExtractTestComponent>().Duration = value; }
@@ -69,7 +69,14 @@ namespace CustomExtracts
 
 
 
-		internal static void CreateExtract(string name, Vector3 position, Vector3 size, Vector3 eulerAngles, float time = 7f, bool enabled = true)
+		private void OnDestroy()
+		{
+			DestroyAllExtracts();
+		}
+
+
+
+		internal void CreateExtract(string name, Vector3 position, Vector3 size, Vector3 eulerAngles, float time = 7f, bool enabled = true)
 		{
 			if (Singleton<GameWorld>.Instance == null)
 			{
@@ -121,7 +128,7 @@ namespace CustomExtracts
 
 
 
-		internal static void DestroyAllExtracts()
+		internal void DestroyAllExtracts()
 		{
 			_extracts.ForEach(GameObject.Destroy);
 			_extracts.Clear();
@@ -131,7 +138,7 @@ namespace CustomExtracts
 
 
 
-		internal static void DestroyCurrentExtract()
+		internal void DestroyCurrentExtract()
 		{
 			GameObject.Destroy(_extracts[_currentExtractIndex]);
 			_extracts.RemoveAt(_currentExtractIndex);
@@ -152,7 +159,7 @@ namespace CustomExtracts
 
 
 
-		internal static void IncrementCurrentExtract()
+		internal void IncrementCurrentExtract()
 		{
 			if (NoExtracts)
 			{
@@ -180,7 +187,7 @@ namespace CustomExtracts
 
 
 
-		internal static void DecrementCurrentExtract()
+		internal void DecrementCurrentExtract()
 		{
 			if (NoExtracts)
 			{
@@ -208,14 +215,14 @@ namespace CustomExtracts
 
 
 
-		internal static void ShowExtracts(bool show)
+		internal void ShowExtracts(bool show)
 		{
 			_extracts.ForEach(extract => extract.GetComponent<Renderer>().enabled = show);
 		}
 
 
 
-		internal static void ChangeColor(ChangeColorForExtractState state, Color color)
+		internal void ChangeColor(ChangeColorForExtractState state, Color color)
 		{
 			switch (state)
 			{
