@@ -122,7 +122,7 @@ namespace CustomExtracts
 			if (!CustomExtractsManager.NoExtracts)
 			{
 				CustomExtractsManager.CurrentExtractPosition = TransformControls(10, 120, "Position", "X", "Y", "Z", 15, ref _positionXText, ref _positionYText, ref _positionZText, CustomExtractsManager.CurrentExtractPosition);
-				CustomExtractsManager.CurrentExtractSize = TransformControls(250, 120, "Size", "Width", "Height", "Pitch", 45, ref _sizeXText, ref _sizeYText, ref _sizeZText, CustomExtractsManager.CurrentExtractSize);
+				CustomExtractsManager.CurrentExtractSize = TransformControls(250, 120, "Size", "Width", "Height", "Length", 45, ref _sizeXText, ref _sizeYText, ref _sizeZText, CustomExtractsManager.CurrentExtractSize);
 				CustomExtractsManager.CurrentExtractEulerAngles = TransformControls(520, 120, "Rotation", "Pitch", "Yaw", "Roll", 35, ref _rotationXText, ref _rotationYText, ref _rotationZText, CustomExtractsManager.CurrentExtractEulerAngles);
 				PropertiesControls(10, 225);
 
