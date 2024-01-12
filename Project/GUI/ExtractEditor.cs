@@ -13,7 +13,7 @@ namespace CustomExtracts
 
 		private GameObject _input;
 
-		private Rect _editorWindowRect         = new Rect(50, 60, 735, 333);
+		private Rect _editorWindowRect         = new Rect(50, 60, 785, 333);
 		private Rect _unsavedWarningWindowRect = new Rect(850, 500, 350, 130);
 		private Rect _deleteWarningWindowRect  = new Rect(850, 500, 300, 130);
 
@@ -112,7 +112,7 @@ namespace CustomExtracts
 				Color originalTextColor = GUI.contentColor;
 
 				GUI.contentColor = Color.yellow;
-				GUI.Label(new Rect(316, _editorWindowRect.height - 35, 110, 25), "unsaved changes");
+				GUI.Label(new Rect(341, _editorWindowRect.height - 35, 110, 25), "unsaved changes");
 
 				GUI.contentColor = originalTextColor;
 			}
@@ -121,9 +121,9 @@ namespace CustomExtracts
 
 			if (!CustomExtractsManager.NoExtracts)
 			{
-				CustomExtractsManager.CurrentExtractPosition = TransformControls(10, 120, "Position", ref _positionXText, ref _positionYText, ref _positionZText, CustomExtractsManager.CurrentExtractPosition);
-				CustomExtractsManager.CurrentExtractSize = TransformControls(250, 120, "Size", ref _sizeXText, ref _sizeYText, ref _sizeZText, CustomExtractsManager.CurrentExtractSize);
-				CustomExtractsManager.CurrentExtractEulerAngles = TransformControls(490, 120, "Rotation", ref _rotationXText, ref _rotationYText, ref _rotationZText, CustomExtractsManager.CurrentExtractEulerAngles);
+				CustomExtractsManager.CurrentExtractPosition = TransformControls(10, 120, "Position", "X", "Y", "Z", 15, ref _positionXText, ref _positionYText, ref _positionZText, CustomExtractsManager.CurrentExtractPosition);
+				CustomExtractsManager.CurrentExtractSize = TransformControls(250, 120, "Size", "Width", "Height", "Pitch", 45, ref _sizeXText, ref _sizeYText, ref _sizeZText, CustomExtractsManager.CurrentExtractSize);
+				CustomExtractsManager.CurrentExtractEulerAngles = TransformControls(520, 120, "Rotation", "Pitch", "Yaw", "Roll", 35, ref _rotationXText, ref _rotationYText, ref _rotationZText, CustomExtractsManager.CurrentExtractEulerAngles);
 				PropertiesControls(10, 225);
 
 				NavigationControls(20, 45);
@@ -195,16 +195,16 @@ namespace CustomExtracts
 
 		private void NameControls(float x, float y)
 		{
-			GUI.Box(new Rect(x, y, 715, 90), "");
+			GUI.Box(new Rect(x, y, 765, 90), "");
 
 			if (!CustomExtractsManager.NoExtracts)
-				CustomExtractsManager.CurrentExtractName = StringSettingField(new Rect(x + 100, y + 20, 515, 22), ref _nameText, CustomExtractsManager.CurrentExtractName);
+				CustomExtractsManager.CurrentExtractName = StringSettingField(new Rect(x + 100, y + 20, 565, 22), ref _nameText, CustomExtractsManager.CurrentExtractName);
 			else
 			{
 				Color originalTextColor = GUI.contentColor;
 
 				GUI.contentColor = Color.red;
-				GUI.TextField(new Rect(x + 100, y + 20, 515, 22), "no extracts to edit");
+				GUI.TextField(new Rect(x + 100, y + 20, 565, 22), "no extracts to edit");
 				GUI.contentColor = originalTextColor;
 				return;
 			}
@@ -212,18 +212,15 @@ namespace CustomExtracts
 
 
 
-		private Vector3 TransformControls(float x, float y, string name, ref string xText, ref string yText, ref string zText, Vector3 vector)
+		private Vector3 TransformControls(float x, float y, string name, string param1Name, string param2Name, string param3Name, float paramNameOffset, ref string param1Text, ref string param2Text, ref string param3Text, Vector3 vector)
 		{
 			float vecX, vecY, vecZ;
 
-			GUI.Box(new Rect(x, y, 235, 100), name);
-			GUI.Label(new Rect(x + 5, y + 22, 25, 25), "X");
-			GUI.Label(new Rect(x + 5, y + 47, 25, 25), "Y");
-			GUI.Label(new Rect(x + 5, y + 72, 25, 25), "Z");
+			GUI.Box(new Rect(x, y, 220 + paramNameOffset, 100), name);
 
-			vecX = FloatSettingField(new Rect(x + 20, y + 22, 60, 22), ref xText, vector.x, true);
-			vecY = FloatSettingField(new Rect(x + 20, y + 47, 60, 22), ref yText, vector.y, true);
-			vecZ = FloatSettingField(new Rect(x + 20, y + 72, 60, 22), ref zText, vector.z, true);
+			vecX = FloatSettingField(x + 5, y + 22, param1Name, paramNameOffset, ref param1Text, vector.x, true);
+			vecY = FloatSettingField(x + 5, y + 47, param2Name, paramNameOffset, ref param2Text, vector.y, true);
+			vecZ = FloatSettingField(x + 5, y + 72, param3Name, paramNameOffset, ref param3Text, vector.z, true);
 
 			return new Vector3(vecX, vecY, vecZ);
 		}
@@ -232,7 +229,7 @@ namespace CustomExtracts
 
 		private void PropertiesControls(float x, float y)
 		{
-			GUI.Box(new Rect(x, y, 715, 60), "");
+			GUI.Box(new Rect(x, y, 765, 60), "");
 
 			// ----- Begin enabled -----
 			GUI.Label(new Rect(x + 10, y + 5, 100, 100), "Enabled");
@@ -250,8 +247,7 @@ namespace CustomExtracts
 			// ----- End enabled -----
 
 			// ----- Begin time -----
-			GUI.Label(new Rect(x + 10, y + 30, 100, 100), "Time (seconds)");
-			CustomExtractsManager.CurrentExtractTime = FloatSettingField(new Rect(x + 105, y + 30, 35, 22), ref _timeText, CustomExtractsManager.CurrentExtractTime, lowerLimit: 0);
+			CustomExtractsManager.CurrentExtractTime = FloatSettingField(15, 255, "Time (seconds)", 95, ref _timeText, CustomExtractsManager.CurrentExtractTime, lowerLimit: 0);
 			// ----- End time -----
 		}
 
@@ -265,7 +261,7 @@ namespace CustomExtracts
 				ResetAllFieldText();
 			}
 
-			if (GUI.Button(new Rect(x + 615, y, 80, 22), "Next") && !LockEditor)
+			if (GUI.Button(new Rect(x + 665, y, 80, 22), "Next") && !LockEditor)
 			{
 				CustomExtractsManager.IncrementCurrentExtract();
 				ResetAllFieldText();
@@ -309,7 +305,7 @@ namespace CustomExtracts
 			Color originalBackgroundColor = GUI.backgroundColor;
 
 			GUI.backgroundColor = Color.green;
-			if (GUI.Button(new Rect(575, _editorWindowRect.height - 40, 70, 30), "New") && !LockEditor)
+			if (GUI.Button(new Rect(625, _editorWindowRect.height - 40, 70, 30), "New") && !LockEditor)
 			{
 				// TODO: Create a new disabled extract at player position
 				//       with default size, rotation, and time.
@@ -323,7 +319,7 @@ namespace CustomExtracts
 				return;
 
 			GUI.backgroundColor = Color.red;
-			if (GUI.Button(new Rect(655, _editorWindowRect.height - 40, 70, 30), "Delete") && !LockEditor)
+			if (GUI.Button(new Rect(705, _editorWindowRect.height - 40, 70, 30), "Delete") && !LockEditor)
 				_showDeleteWarning = true;
 
 			GUI.backgroundColor = originalBackgroundColor;
@@ -367,8 +363,10 @@ namespace CustomExtracts
 
 
 
-		private float FloatSettingField(Rect rect, ref string displayText, float val, bool incrementAndDecrementButtons = false, float? lowerLimit = null, float? upperLimit = null)
+		private float FloatSettingField(float x, float y, string name, float nameWidth, ref string displayText, float val, bool incrementAndDecrementButtons = false, float? lowerLimit = null, float? upperLimit = null)
 		{
+			GUI.Label(new Rect(x, y, nameWidth, 25), name);
+
 			Color originalTextColor = GUI.contentColor;
 			float returnVal = val;
 			bool validFloat;
@@ -389,28 +387,28 @@ namespace CustomExtracts
 				GUI.contentColor = Color.red;
 
 			if (!LockEditor)
-				displayText = GUI.TextField(rect, displayText);
+				displayText = GUI.TextField(new Rect(x + nameWidth, y, 60, 22), displayText);
 			else
-				GUI.TextField(rect, displayText); // TextField can't update if it's input string never changes
+				GUI.TextField(new Rect(x + nameWidth, y, 60, 22), displayText); // TextField can't update if it's input string never changes
 
 			GUI.contentColor = originalTextColor;
 
 			if (incrementAndDecrementButtons)
 			{
-				if (GUI.RepeatButton(new Rect(rect.x + rect.width + 5, rect.y, 22, 22), "-") && validFloat && !LockEditor)
+				if (GUI.RepeatButton(new Rect(x + nameWidth + 65, y, 22, 22), "-") && validFloat && !LockEditor)
 				{
 					float temp = float.Parse(displayText) - Time.deltaTime;
 					displayText = temp.ToString();
 				}
 
-				if (GUI.RepeatButton(new Rect(rect.x + rect.width + 27, rect.y, 22, 22), "+") && validFloat && !LockEditor)
+				if (GUI.RepeatButton(new Rect(x + nameWidth + 87, y, 22, 22), "+") && validFloat && !LockEditor)
 				{
 					float temp = float.Parse(displayText) + Time.deltaTime;
 					displayText = temp.ToString();
 				}
 			}
 
-			if (GUI.Button(new Rect(rect.x + rect.width + (incrementAndDecrementButtons ? 54 : 5), rect.y, 45, 22), "Set") && !LockEditor)
+			if (GUI.Button(new Rect(x + nameWidth + (incrementAndDecrementButtons ? 114 : 65), y, 45, 22), "Set") && !LockEditor)
 			{
 				if (!validFloat)
 				{
@@ -425,7 +423,7 @@ namespace CustomExtracts
 				}
 			}
 
-			if (GUI.Button(new Rect(rect.x + rect.width + (incrementAndDecrementButtons ? 104 : 55), rect.y, 45, 22), "Clear") && !LockEditor)
+			if (GUI.Button(new Rect(x + nameWidth + (incrementAndDecrementButtons ? 164 : 115), y, 45, 22), "Clear") && !LockEditor)
 				displayText = val.ToString();
 
 			return returnVal;
