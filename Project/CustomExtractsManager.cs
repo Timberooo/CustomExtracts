@@ -54,7 +54,11 @@ namespace CustomExtracts
 		internal static bool CurrentExtractEnabled
 		{
 			get { return _extracts[_currentExtractIndex].GetComponent<Collider>().enabled; }
-			set { _extracts[_currentExtractIndex].GetComponent<Collider>().enabled = value; }
+			set
+			{
+				_extracts[_currentExtractIndex].GetComponent<Renderer>().material.color = value ? Plugin.CurrentExtractColor.Value : Plugin.DisabledCurrentExtractColor.Value;
+				_extracts[_currentExtractIndex].GetComponent<Collider>().enabled = value;
+			}
 		}
 
 		internal static float CurrentExtractTime
