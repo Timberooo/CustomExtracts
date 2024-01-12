@@ -156,7 +156,10 @@ namespace CustomExtracts
 				return;
 			}
 
-			_extracts[_currentExtractIndex].GetComponent<Renderer>().material.color = Plugin.ExtractColor.Value;
+			if (_extracts[_currentExtractIndex].GetComponent<Collider>().enabled)
+				_extracts[_currentExtractIndex].GetComponent<Renderer>().material.color = Plugin.ExtractColor.Value;
+			else
+				_extracts[_currentExtractIndex].GetComponent<Renderer>().material.color = Plugin.DisabledExtractColor.Value;
 
 			// Checks if there is a next extract or if the
 			// index should loop back to the first extract
@@ -165,7 +168,10 @@ namespace CustomExtracts
 			else
 				_currentExtractIndex = 0;
 
-			_extracts[_currentExtractIndex].GetComponent<Renderer>().material.color = Plugin.CurrentExtractColor.Value;
+			if (_extracts[_currentExtractIndex].GetComponent<Collider>().enabled)
+				_extracts[_currentExtractIndex].GetComponent<Renderer>().material.color = Plugin.CurrentExtractColor.Value;
+			else
+				_extracts[_currentExtractIndex].GetComponent<Renderer>().material.color = Plugin.DisabledCurrentExtractColor.Value;
 		}
 
 
@@ -178,7 +184,10 @@ namespace CustomExtracts
 				return;
 			}
 
-			_extracts[_currentExtractIndex].GetComponent<Renderer>().material.color = Plugin.ExtractColor.Value;
+			if (_extracts[_currentExtractIndex].GetComponent<Collider>().enabled)
+				_extracts[_currentExtractIndex].GetComponent<Renderer>().material.color = Plugin.ExtractColor.Value;
+			else
+				_extracts[_currentExtractIndex].GetComponent<Renderer>().material.color = Plugin.DisabledExtractColor.Value;
 
 			// Checks if there is a previous extract or if
 			// the index should loop back to the last extract
@@ -187,7 +196,10 @@ namespace CustomExtracts
 			else
 				_currentExtractIndex = _extracts.Count - 1;
 
-			_extracts[_currentExtractIndex].GetComponent<Renderer>().material.color = Plugin.CurrentExtractColor.Value;
+			if (_extracts[_currentExtractIndex].GetComponent<Collider>().enabled)
+				_extracts[_currentExtractIndex].GetComponent<Renderer>().material.color = Plugin.CurrentExtractColor.Value;
+			else
+				_extracts[_currentExtractIndex].GetComponent<Renderer>().material.color = Plugin.DisabledCurrentExtractColor.Value;
 		}
 
 
