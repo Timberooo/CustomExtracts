@@ -1,44 +1,97 @@
-﻿using Aki.Reflection.Utils;
-using BepInEx;
+﻿using BepInEx;
 using BepInEx.Configuration;
-using Comfort.Common;
-using EFT;
-using EFT.UI;
-using System.Linq;
-using System.Reflection;
+using BepInEx.Logging;
 using UnityEngine;
 
 namespace CustomExtracts
 {
 	[BepInPlugin("com.Timber.CustomExtracts", "CustomExtracts", "1.0.0")]
-	public class Plugin : BaseUnityPlugin
+	internal class Plugin : BaseUnityPlugin
 	{
-		// BepInEx configs
-		internal static ConfigEntry<Color>            extractColor;
-		internal static ConfigEntry<Color>            currentExtractColor;
-		internal static ConfigEntry<KeyboardShortcut> toggleExtractEditorPanel;
+		internal static ManualLogSource CustomExtractsLogger { get; } = BepInEx.Logging.Logger.CreateLogSource("CustomExtracts");
+
+		internal static ConfigEntry<KeyboardShortcut> ToggleExtractEditor { get; private set; }
+		internal static ConfigEntry<bool>             AlwaysShowExtracts { get; private set; }
+		internal static ConfigEntry<Color>            ExtractColor { get; private set; }
+		internal static ConfigEntry<Color>            CurrentExtractColor { get; private set; }
+		internal static ConfigEntry<Color>            DisabledExtractColor { get; private set; }
+		internal static ConfigEntry<Color>            DisabledCurrentExtractColor { get; private set; }
 
 
 
 		private void Awake()
 		{
-			new OnGameStartPatch().Enable();
+			BepInEx.Logging.Logger.Sources.Add(CustomExtractsLogger);
+
+			new GameWorldOnGameStartPatch().Enable();
 			new GameWorldOnDestroyPatch().Enable();
 
-			extractColor = Config.Bind("", "Extract color", new Color(1f, 0f, 1f, 0.75f),
-			                           new ConfigDescription("Extraction zone color", null,
-			                           new ConfigurationManagerAttributes { IsAdvanced = true, Category = null, Order = 1 }));
+			ToggleExtractEditor         = Config.Bind("Settings", "Editor key", new KeyboardShortcut(KeyCode.F5),
+			                                          new ConfigDescription("The key to toggle the custom extract editor"));
 
-			currentExtractColor = Config.Bind("", "Current extract color", new Color(0f, 1f, 0f, 0.75f),
-			                                  new ConfigDescription("Current extraction zone color", null,
-			                                  new ConfigurationManagerAttributes { IsAdvanced = true, Category = null, Order = 2 }));
+			AlwaysShowExtracts          = Config.Bind("Settings", "Always show custom extracts", false,
+			                                          new ConfigDescription("True to always show custom extracts; false to only show custom extracts when the editor is open"));
 
-			toggleExtractEditorPanel = Config.Bind("", "Extract editor key", new KeyboardShortcut(KeyCode.F5),
-			                                       new ConfigDescription("The key that toggles the extract editor panel", null,
-			                                       new ConfigurationManagerAttributes { IsAdvanced = true, Category = null, Order = 3}));
+			ExtractColor                = Config.Bind("Settings", "Extract color", new Color(1f, 0f, 1f, 0.75f),
+			                                          new ConfigDescription("The color of extracts when visible"));
 
-			extractColor.SettingChanged        += CustomExtractsManager.extractColor_SettingChanged;
-			currentExtractColor.SettingChanged += CustomExtractsManager.currentExtractColor_SettingChanged;
+			CurrentExtractColor         = Config.Bind("Settings", "Current extract color", new Color(0f, 1f, 0f, 0.75f),
+			                                          new ConfigDescription("The color of the current extract when visible"));
+
+			DisabledExtractColor        = Config.Bind("Settings", "Disabled extract color", new Color(0.5f, 0f, 0.5f, 0.75f),
+			                                          new ConfigDescription("The color of disabled extracts when visible"));
+
+			DisabledCurrentExtractColor = Config.Bind("Settings", "Disabled current extract color", new Color(0f, 0.5f, 0f, 0.75f),
+			                                          new ConfigDescription("The color of the current extract when visible and disabled"));
+
+			AlwaysShowExtracts.SettingChanged          += AlwaysShowExtracts_SettingChanged;
+			ExtractColor.SettingChanged                += ExtractColor_SettingChanged;
+			CurrentExtractColor.SettingChanged         += CurrentExtractColor_SettingChanged;
+			DisabledExtractColor.SettingChanged        += DisabledExtractColor_SettingChanged;
+			DisabledCurrentExtractColor.SettingChanged += DisabledCurrentExtractColor_SettingChanged;
+		}
+
+
+
+		private void OnDestroy()
+		{
+			BepInEx.Logging.Logger.Sources.Remove(CustomExtractsLogger);
+		}
+
+
+
+		private void AlwaysShowExtracts_SettingChanged(object sender, System.EventArgs e)
+		{
+			if (!ExtractEditor.ShowEditor)
+				CustomExtractsManager.ShowExtracts((bool)((SettingChangedEventArgs)e).ChangedSetting.BoxedValue);
+		}
+
+
+
+		private void ExtractColor_SettingChanged(object sender, System.EventArgs e)
+		{
+			CustomExtractsManager.ChangeColor(CustomExtractsManager.ChangeColorForExtractState.General, (Color)((SettingChangedEventArgs)e).ChangedSetting.BoxedValue);
+		}
+
+
+
+		private void CurrentExtractColor_SettingChanged(object sender, System.EventArgs e)
+		{
+			CustomExtractsManager.ChangeColor(CustomExtractsManager.ChangeColorForExtractState.Current, (Color)((SettingChangedEventArgs)e).ChangedSetting.BoxedValue);
+		}
+
+
+
+		private void DisabledExtractColor_SettingChanged(object sender, System.EventArgs e)
+		{
+			CustomExtractsManager.ChangeColor(CustomExtractsManager.ChangeColorForExtractState.DisabledGeneral, (Color)((SettingChangedEventArgs)e).ChangedSetting.BoxedValue);
+		}
+
+
+
+		private void DisabledCurrentExtractColor_SettingChanged(object sender, System.EventArgs e)
+		{
+			CustomExtractsManager.ChangeColor(CustomExtractsManager.ChangeColorForExtractState.DisabledCurrent, (Color)((SettingChangedEventArgs)e).ChangedSetting.BoxedValue);
 		}
 	}
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace CustomExtracts
 {
-	public class OnGameStartPatch : ModulePatch
+	public class GameWorldOnGameStartPatch : ModulePatch
 	{
 		protected override MethodBase GetTargetMethod()
 		{
@@ -45,9 +45,9 @@ namespace CustomExtracts
 			string name3 = "Another extract";
 			float time3 = 10f;
 
-			CustomExtractsManager.CreateExtract(position, size, eulerAngles, name, time);
-			CustomExtractsManager.CreateExtract(position2, size2, eulerAngles2, name2, time2);
-			CustomExtractsManager.CreateExtract(position3, size3, eulerAngles3, name3, time3);
+			CustomExtractsManager.CreateExtract(name, position, size, eulerAngles, time);
+			CustomExtractsManager.CreateExtract(name2, position2, size2, eulerAngles2, time2);
+			CustomExtractsManager.CreateExtract(name3, position3, size3, eulerAngles3, time3);
 		}
 	}
 }
